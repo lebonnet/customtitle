@@ -87,7 +87,7 @@ export class CustomTitle {
             max = this.config.deepParents;
         while (el && !text && el.nodeName !== 'BODY' && max--) {
             if (!el.dataset) continue;
-            text = el.dataset.title || el.dataset.guide;
+            text = el.dataset.title;
             el = el.parentElement;
         }
         return text;
