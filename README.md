@@ -12,7 +12,8 @@ HTML
 ```
 
 ### options:
-time - show title after time, ms (defult 500ms) 
+time - show title after time, ms (defult 500ms)
+
 deepParents - how deep find parents for show title (defult 3)
 
 You can set window property for disabled show this title
