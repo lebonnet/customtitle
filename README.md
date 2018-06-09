@@ -1,5 +1,7 @@
 # customtitle
 custom browser title
 
-#how to use
+## how to use
+```html
 new CustomTitle();
+```
