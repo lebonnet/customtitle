@@ -2,6 +2,8 @@ const
     d = document,
     w = window;
 
+let instance = null;
+
 /**
  * User custom title
  */
@@ -20,61 +22,63 @@ export class CustomTitle {
      * Initialization
      */
     ini() {
-        d.addEventListener('mouseover', this.show.bind(this));
-        d.addEventListener('click', this.closeTitle.bind(this));
-        w.addEventListener('resize', this.hide.bind(this));
-        w.addEventListener('scroll', this.hide.bind(this));
-        return this;
+        if (instance) return instance;
+        instance = this;
+        d.addEventListener('mouseover', instance.show);
+        d.addEventListener('click', instance.closeTitle);
+        w.addEventListener('resize', instance.hide);
+        w.addEventListener('scroll', instance.hide);
+        return instance;
     }
 
     /**
      * Show title
      * @param e
+     * @return instance
      */
     show(e) {
-        if (w.notShowTitle) return this;
-        let me = this,
-            el = e.target,
+        if (w.notShowTitle) return instance;
+        let el = e.target,
             text;
 
-        clearTimeout(this.freeze);
-        if (!el || el.tagName === "HTML") return this;
+        clearTimeout(instance.freeze);
+        if (!el || el.tagName === "HTML") return instance;
 
-        text = this.getText(el);
-        if (!text) return this;
+        text = instance.getText(el);
+        if (!text) return instance;
 
         // save cursor position
-        me.leftPosition = e.clientX;
-        me.topPosition = e.clientY;
+        instance.leftPosition = e.clientX;
+        instance.topPosition = e.clientY;
 
-        me.freeze = setTimeout(() => {
-            me.el = el;
-            d.addEventListener('mousemove', me.cursorWatcher.bind(me));
-            me.draw(text);
-        }, this.config.time);
-        return this;
+        instance.freeze = setTimeout(() => {
+            instance.el = el;
+            d.addEventListener('mousemove', instance.cursorWatcher);
+            instance.draw(text);
+        }, instance.config.time);
+        return instance;
     };
 
     /**
      * Hide title
      */
     hide() {
-        if (this.title) this.title.style.display = '';
-        d.removeEventListener('mousemove', this.cursorWatcher);
-        d.removeEventListener('click', this.closeTitle);
-        w.removeEventListener('resize', this.hide);
-        w.removeEventListener('scroll', this.hide);
-        return this;
+        if (instance.title) instance.title.style.display = '';
+        d.removeEventListener('mousemove', instance.cursorWatcher);
+        d.removeEventListener('click', instance.closeTitle);
+        w.removeEventListener('resize', instance.hide);
+        w.removeEventListener('scroll', instance.hide);
+        return instance;
     }
 
     /**
      * Update title
      */
     closeTitle() {
-        if (this.title) this.title.style.display = '';
-        this.close = 1;
-        delete this.el;
-        return this;
+        if (instance.title) instance.title.style.display = '';
+        instance.close = 1;
+        delete instance.el;
+        return instance;
     }
 
     /**
@@ -84,7 +88,7 @@ export class CustomTitle {
      */
     getText(el) {
         let text = '',
-            max = this.config.deepParents;
+            max = instance.config.deepParents;
         while (el && !text && el.nodeName !== 'BODY' && max--) {
             if (!el.dataset) continue;
             text = el.dataset.title;
@@ -99,10 +103,10 @@ export class CustomTitle {
      */
     cursorWatcher(e) {
         // update cursor position
-        this.leftPosition = e.clientX;
-        this.topPosition = e.clientY;
-        if (e.target !== this.el) this.hide();
-        if (!this.el && delete this.close) this.show(e);
+        instance.leftPosition = e.clientX;
+        instance.topPosition = e.clientY;
+        if (e.target !== instance.el) instance.hide();
+        if (!instance.el && delete instance.close) instance.show(e);
     }
 
     /**
@@ -111,39 +115,38 @@ export class CustomTitle {
      */
     draw(text) {
 
-        let title = this.title;
+        let title = instance.title;
 
         if (!title) {
-            this.title = title = d.createElement('div');
+            instance.title = title = d.createElement('div');
             title.id = 'custom-title';
             d.body.appendChild(title);
         }
 
         title.innerHTML = text;
-        return this.setPosition();
+        return instance.setPosition();
     }
 
     /**
      * Set position & show title
      */
     setPosition() {
-        let me = this;
-        if (!me.title || !me.el) return me;
-        clearTimeout(me.setTimer);
+        if (!instance.title || !instance.el) return me;
+        clearTimeout(instance.setTimer);
 
-        me.setTimer = setTimeout(() => {
-            if (!me.el) return;
-            let el = me.el,
+        instance.setTimer = setTimeout(() => {
+            if (!instance.el) return;
+            let el = instance.el,
                 difX, difY, b = d.body,
                 elRect = el.getBoundingClientRect(), width, height, isFixed,
                 windowYScroll = w.pageYOffset || d.documentElement.scrollTop,
-                left = me.leftPosition || elRect.left,
-                top = windowYScroll + (me.topPosition ? Math.round(me.topPosition + 25) : Math.round(elRect.top + elRect.height + 15)),
-                title = me.title;
+                left = instance.leftPosition || elRect.left,
+                top = windowYScroll + (instance.topPosition ? Math.round(instance.topPosition + 25) : Math.round(elRect.top + elRect.height + 15)),
+                title = instance.title;
 
-            isFixed = me.parents(el).some(p => getComputedStyle(p).position === 'fixed');
+            isFixed = instance.parents(el).some(p => getComputedStyle(p).position === 'fixed');
 
-            if (!elRect.width) return me.hide();
+            if (!elRect.width) return instance.hide();
 
             title.style.display = 'block';
             title.style.left = left + 'px';
@@ -168,7 +171,7 @@ export class CustomTitle {
             }
 
         }, 5);
-        return me;
+        return instance;
     }
 
     /**
