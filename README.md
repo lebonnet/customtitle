@@ -20,3 +20,6 @@ You can set window property for disabled show this title
 ```html
 window.notShowTitle = true;
 ```
+
+## license:
+Standard MIT license
