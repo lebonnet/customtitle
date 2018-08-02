@@ -8,13 +8,13 @@ new CustomTitle();
 ```
 HTML
 ```html
-<div data-title="title here">I want show title</div>
+<span data-title="title here">I want show title</span>
 ```
 
 ### options:
-time - show title after time, ms (default 500ms)
+time (default 500ms) - show title after time, ms
 
-deepParents - how deep find parents for show title (default 3)
+deepParents (default 3) - how deep find parents for show title
 
 You can set window property for disabled show this title
 ```html

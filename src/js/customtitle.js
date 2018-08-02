@@ -1,3 +1,6 @@
+import "babel-polyfill";
+import "../scss/customtitle.scss"
+
 const
     d = document,
     w = window;
@@ -7,7 +10,7 @@ let instance = null;
 /**
  * User custom title
  */
-export class CustomTitle {
+class CustomTitle {
     constructor(opts = {}) {
 
         this.config = Object.assign({
@@ -141,10 +144,10 @@ export class CustomTitle {
                 elRect = el.getBoundingClientRect(), width, height, isFixed,
                 windowYScroll = w.pageYOffset || d.documentElement.scrollTop,
                 left = instance.leftPosition || elRect.left,
-                top = windowYScroll + (instance.topPosition ? Math.round(instance.topPosition + 25) : Math.round(elRect.top + elRect.height + 15)),
+                top = windowYScroll + (instance.topPosition ? Math.round(instance.topPosition + 30) : Math.round(elRect.top + elRect.height + 20)),
                 title = instance.title;
 
-            isFixed = instance.parents(el).some(p => getComputedStyle(p).position === 'fixed');
+            isFixed = CustomTitle.parents(el).some(p => getComputedStyle(p).position === 'fixed');
 
             if (!elRect.width) return instance.hide();
 
@@ -179,7 +182,7 @@ export class CustomTitle {
      * @param el
      * @return {Array}
      */
-    parents(el) {
+    static parents(el) {
         const els = [];
         while (el && el.tagName !== 'BODY') {
             els.unshift(el);
@@ -188,3 +191,5 @@ export class CustomTitle {
         return els;
     };
 }
+
+export default window.CustomTitle = CustomTitle;
