@@ -29,8 +29,8 @@ class CustomTitle {
         instance = this;
         d.addEventListener('mouseover', instance.show);
         d.addEventListener('click', instance.closeTitle);
-        w.addEventListener('resize', instance.hide);
-        w.addEventListener('scroll', instance.hide);
+        w.addEventListener('resize', instance.closeTitle);
+        w.addEventListener('scroll', instance.closeTitle);
         return instance;
     }
 
@@ -69,13 +69,11 @@ class CustomTitle {
         if (instance.title) instance.title.style.display = '';
         d.removeEventListener('mousemove', instance.cursorWatcher);
         d.removeEventListener('click', instance.closeTitle);
-        w.removeEventListener('resize', instance.hide);
-        w.removeEventListener('scroll', instance.hide);
         return instance;
     }
 
     /**
-     * Update title
+     * Close title
      */
     closeTitle() {
         if (instance.title) instance.title.style.display = '';
@@ -175,6 +173,16 @@ class CustomTitle {
 
         }, 5);
         return instance;
+    }
+
+    /**
+     * destroy
+     */
+    destroy() {
+        w.removeEventListener('resize', instance.closeTitle);
+        w.removeEventListener('scroll', instance.closeTitle);
+        instance.title && instance.hide().title.remove();
+        instance = null;
     }
 
     /**

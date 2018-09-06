@@ -51,7 +51,7 @@ const config = {
     },
     plugins: [
         new MiniCssExtractPlugin({
-            filename: '[name].css',
+            filename: 'customtitle.min.css',
             chunkFilename: '[id].css'
         }),
         new HtmlWebpackPlugin({
@@ -86,7 +86,7 @@ const config = {
     } : {},
     devServer: {
         contentBase: distPath,
-        port: 8585,
+        port: 8303,
         compress: true,
         open: true
     }
