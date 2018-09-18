@@ -40,7 +40,7 @@ class CustomTitle {
      * @return instance
      */
     show(e) {
-        if (w.notShowTitle) return instance;
+        if (w.notShowTitle || 'ontouchstart' in w) return instance;
         let el = e.target,
             text;
 
